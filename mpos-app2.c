@@ -61,6 +61,13 @@ run_child(void)
 				   space, so this change to 'counter' will be
 				   visible to all processes. */
 
+	if (sys_getpid()%2 == 0) // Even numbered processes
+	{
+		pid_t i;
+		for (i = 3; i < NPROCS; i += 2)
+			sys_kill(i);
+	}
+
 	app_printf("Process %d lives, counter %d!\n",
 		   sys_getpid(), input_counter);
 	sys_exit(input_counter);

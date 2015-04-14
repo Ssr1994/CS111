@@ -177,8 +177,11 @@ interrupt(registers_t *reg)
 		{
 			if (current->waiting_procs[i] != 0)
 			{
-				proc_array[i].p_state = P_RUNNABLE;
-				proc_array[i].p_registers.reg_eax = current->p_exit_status;
+				if (proc_array[i].p_state == P_BLOCKED) // In case it has been killed
+				{
+					proc_array[i].p_state = P_RUNNABLE;
+					proc_array[i].p_registers.reg_eax = current->p_exit_status;
+				}
 				current->waiting_procs[i] = 0;
 			}
 		}
@@ -208,6 +211,37 @@ interrupt(registers_t *reg)
 		}
 		schedule();
 	}
+
+	case INT_SYS_KILL: {
+		// 'sys_kill' is to make another process exit.
+		// It may not kill process 1 (main process) or itself however.
+		// Basically it copies the INT_SYS_EXIT clause for the killed process
+		pid_t p = current->p_registers.reg_eax;
+		if (p <= 1 || p >= NPROCS || p == current->p_pid
+		    || proc_array[p].p_state == P_EMPTY)
+			current->p_registers.reg_eax = -1;
+		else
+		{
+			proc_array[p].p_state = P_EMPTY;
+			proc_array[p].p_exit_status = proc_array[p].p_registers.reg_eax;
+			pid_t i;
+			for (i = 0; i < NPROCS; i++) 
+			{
+				if (proc_array[p].waiting_procs[i] != 0)
+				{
+					if (proc_array[i].p_state == P_BLOCKED) // In case it has been killed
+					{
+						proc_array[i].p_state = P_RUNNABLE;
+						proc_array[i].p_registers.reg_eax = proc_array[p].p_exit_status;
+					}
+					proc_array[p].waiting_procs[i] = 0;
+				}
+			}
+			current->p_registers.reg_eax = 0;
+		}
+		run(current);
+	}
+
 
 	default:
 		while (1)

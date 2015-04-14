@@ -8,10 +8,10 @@ Collaborators: N/A
 Response to Exercise 1:
 No, unless it is scheduled right back to sys_getpid(), that is, only one process is running. Otherwise, since the INT_SYS_GETPID passed the PID onto the %eax register and sys_getpid() reads the PID from %eax, if scheduled to another process, the value will be modified and thus sys_getpid() will not have the correct value returned.
 
-Reponse to Exercise 2:
+Response to Exercise 2:
 See file mpos-kern.c
 
-Reponse to Exercise 3:
+Response to Exercise 3:
 Added a field "int waiting_procs[NPROCS]" into struct process_t in mpos-kern.h. If another process i is waiting for this process, then set waiting_procs[i] = 1, otherwise 0.
 Modified the initialization of waiting_procs in start(), and INT_SYS_EXIT and INT_SYS_WAIT in interrupt() in mpos-kern.c. INT_SYS_WAIT will set the corresponding element of waiting_procs of the process it is going to wait for to 1, and INT_SYS_EXIT will search for elements in waiting_procs that are 1 and wake up all these blocked processes.
 
@@ -24,4 +24,5 @@ Please update the Ubuntu system...
 
 
 Extra credit exercises:
-
+Response to Exercise 7:
+See files mpos.h, mpos-kern.c, mpos-app.h, and mpos-app2.c.
