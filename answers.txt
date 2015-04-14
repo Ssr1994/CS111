@@ -12,10 +12,16 @@ Reponse to Exercise 2:
 See file mpos-kern.c
 
 Reponse to Exercise 3:
+Added a field "int waiting_procs[NPROCS]" into struct process_t in mpos-kern.h. If another process i is waiting for this process, then set waiting_procs[i] = 1, otherwise 0.
+Modified the initialization of waiting_procs in start(), and INT_SYS_EXIT and INT_SYS_WAIT in interrupt() in mpos-kern.c. INT_SYS_WAIT will set the corresponding element of waiting_procs of the process it is going to wait for to 1, and INT_SYS_EXIT will search for elements in waiting_procs that are 1 and wake up all these blocked processes.
 
+Response to Exercise 4:
+In INT_SYS_WAIT, we can see that when a process exits, it sets its state to P_ZOMBIE, which makes sense before we made changes in Exercise 3. However, after modification, sys_wait() no longer needs P_ZOMBIE to indicate when it can return. So simply change 
+"current->p_state = P_ZOMBIE;" to "current->p_state = P_EMPTY".
 
 Anything else you'd like us to know:
-
+Please update the Ubuntu system...
 
 
 Extra credit exercises:
+

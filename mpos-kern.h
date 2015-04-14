@@ -23,6 +23,8 @@ typedef struct process {
 	procstate_t p_state;		// Process state; see above
 	int p_exit_status;		// Process's exit status (if it has
 					// exited and p_state == P_ZOMBIE)
+	int waiting_procs[NPROCS];	// Check if any other processes are
+					// waiting on this process
 } process_t;
 
 
