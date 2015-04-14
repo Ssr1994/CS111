@@ -1,0 +1,21 @@
+Name: Siran Shen
+UCLA ID: 304283584
+
+Collaborators: N/A
+
+-------------------------------------------------------------------------------
+
+Response to Exercise 1:
+No, unless it is scheduled right back to sys_getpid(), that is, only one process is running. Otherwise, since the INT_SYS_GETPID passed the PID onto the %eax register and sys_getpid() reads the PID from %eax, if scheduled to another process, the value will be modified and thus sys_getpid() will not have the correct value returned.
+
+Reponse to Exercise 2:
+See file mpos-kern.c
+
+Reponse to Exercise 3:
+
+
+Anything else you'd like us to know:
+
+
+
+Extra credit exercises:
